@@ -1,4 +1,4 @@
-import express, { Application } from "express";
+import express, { Application, Request, Response } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -8,6 +8,9 @@ import useRouters from "./startup/routes";
 import passport from "passport";
 import Session from "express-session";
 import mongo from "connect-mongo";
+import * as multer from "./middlewares/media"
+import { uploadImage, uploadImages } from "./services/media";
+
 dotenv.config()
 
 const app: Application = express()
@@ -25,6 +28,18 @@ app.use(Session({
 }))
 app.use(passport.session())
 app.use(passport.initialize())
+
+app.post("/test",multer.uploadOne , async(req: Request, res: Response)=> {
+    const ans = await uploadImage(req.file!.filename)
+    console.log(ans)
+    res.send(ans)
+})
+
+app.post("/test/many", multer.uploadMany, async(req: Request, res: Response)=>{
+    const result = await uploadImages(req.files!)
+    console.log(result)
+    res.send(result);
+})
 
 useRouters(app)
 

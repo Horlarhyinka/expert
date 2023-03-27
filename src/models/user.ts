@@ -59,6 +59,8 @@ userSchema.methods.verifyPassword = function(password: string){
     return bcrypt.compare(password, this.password)
 }
 
+
+
 userSchema.methods.genToken = function(){
     return jwt.sign({id: (this as user_int)._id}, process.env.SECRET!, {expiresIn: "2d"})
 }
