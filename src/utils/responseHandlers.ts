@@ -14,3 +14,12 @@ export const sendResourceNotFound = (res: Response, resource?: string) => {
   const message = `${resource? resource: ""} not found`
   return res.status(404).json({message})
 }
+
+export const sendUnauthenticated = (res: Response) =>{
+  return res.status(401).json({message: "unauthenticated"})
+}
+
+export const sendServerFailed = (res: Response, action?: string) =>{
+  const message = "failed " + !action?"":"to " + action
+  return res.status(501).json({message})
+}
