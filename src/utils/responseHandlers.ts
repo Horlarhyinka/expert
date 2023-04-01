@@ -20,6 +20,11 @@ export const sendUnauthenticated = (res: Response) =>{
 }
 
 export const sendServerFailed = (res: Response, action?: string) =>{
-  const message = "failed " + !action?"":"to " + action
+  const message = "failed " + `${!action?"":"to " + action}`
   return res.status(501).json({message})
+}
+
+export const sendInvalidEntry = (res: Response, field?: string) =>{
+  const message = "invalid" + `${!field?" entry": " " + field}`
+  return res.status(400).json({message})
 }

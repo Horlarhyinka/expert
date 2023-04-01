@@ -8,8 +8,10 @@ import useRouters from "./startup/routes";
 import passport from "passport";
 import Session from "express-session";
 import mongo from "connect-mongo";
+import listEndPoints from "express-list-endpoints";
 import * as multer from "./middlewares/media"
-import { uploadImage, uploadImages } from "./services/media";
+import { destroyImage, uploadImage, uploadImages } from "./services/media";
+import listEndpoints from "express-list-endpoints";
 
 dotenv.config()
 
@@ -27,19 +29,7 @@ app.use(Session({
     saveUninitialized: false
 }))
 app.use(passport.session())
-app.use(passport.initialize())
-
-app.post("/test",multer.uploadOne , async(req: Request, res: Response)=> {
-    const ans = await uploadImage(req.file!.filename)
-    console.log(ans)
-    res.send(ans)
-})
-
-app.post("/test/many", multer.uploadMany, async(req: Request, res: Response)=>{
-    const result = await uploadImages(req.files!)
-    console.log(result)
-    res.send(result);
-})
+app.use(passport.initialize());
 
 useRouters(app)
 

@@ -29,6 +29,9 @@ const userSchema = new Schema<user_int>({
     about: {
         type: String
     },
+    avatar:{
+        type: String
+    },
     tel: {
         type: Number,
         match: telRegex

@@ -11,6 +11,7 @@ export interface user_int extends Document{
     tel: number,
     resetToken: string | undefined,
     tokenExpiresIn: Date | undefined,
+    avatar: string | undefined,
     verifyPassword: (password: string) => Promise<boolean>,
     genToken: ()=> string,
     updateProfile: (update : Request["body"]) =>Promise<void | user_int>,
@@ -25,7 +26,8 @@ export interface collection_int extends Document{
     skills: (string | null)[],
     portfolio: string | undefined,
     album: (string | null)[],
-    views: number
+    views: number,
+    avatar: string | undefined
 }
 
 export interface user_model extends Model<user_int>{

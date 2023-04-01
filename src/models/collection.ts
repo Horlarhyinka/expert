@@ -1,5 +1,6 @@
 import {Schema, model} from "mongoose";
 import { collection_int } from "./types";
+import {Request } from "express";
 
 const collectionSchema = new Schema<collection_int>({
     title: {
@@ -19,6 +20,9 @@ const collectionSchema = new Schema<collection_int>({
     album: {
         type: [String],
         default: []
+    },
+    avatar: {
+        type: String
     }
 })
 

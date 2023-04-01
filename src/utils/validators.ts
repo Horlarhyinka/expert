@@ -1,5 +1,6 @@
 import Joi from "joi";
 import { mailRegex, secureUrlRegex } from "./regex";
+import {Types} from "mongoose";
 
 export const validateCredentials = (credentials: Object) => Joi.object({
     email: Joi.string().required().pattern(mailRegex).min(6),
@@ -14,3 +15,5 @@ export const validateCollection = (collectionBody: Object) =>Joi.object({
     album: Joi.array(),
     views: Joi.number().default(0).min(0)
 }).validate(collectionBody)
+
+export const validateObjectId = (id: string)=>Types.ObjectId.isValid(id)

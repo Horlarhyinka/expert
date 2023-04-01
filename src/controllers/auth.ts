@@ -47,21 +47,25 @@ export const forgetPassword = catchAsyncError(async(req: Request, res: Response)
     if(!email) return sendMissingDependency(res, "email")
     const user = await User.findOne({email})
     if(!user) return sendResourceNotFound(res, "res")
-    const token = crypto.randomBytes(21).toString("utf8")
+    const token = crypto.randomBytes(21).toString("hex")
     user.resetToken = token
-    user.tokenExpiresIn = new Date(Date.now() + 7200) //expires in two hours
+    user.tokenExpiresIn = new Date(Date.now() + (1000 * 60 * 60 * 2)) //expires in two hours
     await user.save()
     const mailer = new Mailer(email)
     const link = process.env.BASE_URL! + "/" + token
+    console.log(link)
     await mailer.sendPasswordResetToken(link)
     return res.status(203).json({message: `check ${email} inbox to complete action`})
 })
 
 export const resetPassword = catchAsyncError(async(req: Request, res: Response)=>{
+    try{
     const { token } = req.params;
-    if(!token)return sendMissingDependency(res)
-    const user = await User.findOne({resetToken: token, tokenExpiresIn:{$lte: new Date()}})
-    if(!user)return sendResourceNotFound(res)
+    console.log(token)
+    if(!token)return sendMissingDependency(res, "token")
+    const user = await User.findOne({resetToken: token, tokenExpiresIn:{$gte: new Date()}})
+    console.log(user)
+    if(!user)return sendResourceNotFound(res, "user")
     const {password, confirmPassword} = req.body
     if(!password || !confirmPassword) return sendMissingDependency(res, "password and confirm password")
     if(password !== confirmPassword) return res.status(400).json({message: "password must match confirm password"})
@@ -71,6 +75,10 @@ export const resetPassword = catchAsyncError(async(req: Request, res: Response)=
     await user.save()
     const authToken = user.genToken()
     return res.status(200).json({user: pick(user, ["email", "collections"]), token: authToken})
+    }catch(ex){
+        console.log(ex)
+    }
+
 })
 
 export const googleOauthCallback = catchAsyncError(async(req: Request, res: Response)=>{
