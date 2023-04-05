@@ -9,12 +9,6 @@ import dotenv from "dotenv";
 
 dotenv.config()
 
-declare module "express-session"{
-    interface SessionData{
-        count: number
-    }
-}
-
 export default (app: express.Application) =>{
     app.use(cors())
     app.use(helmet())
