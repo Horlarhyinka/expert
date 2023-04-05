@@ -26,10 +26,8 @@ export const getCollections = catchAsyncError(async(req: Request, res: Response)
     if(!user){
         const id = req.query?.user
         if(!id)return res.redirect(301,"/api/v1/collections/all")
-        console.log('i am here', user)
         if(!validateObjectId(String(id)!))return res.status(400).json({message: "invalid entry"})
         user = await (User as user_model).findById(id)
-        console.log(user)
     }
     if(!user)return responseHandlers.sendResourceNotFound(res, "user")
     const collections = await user.getCollections()

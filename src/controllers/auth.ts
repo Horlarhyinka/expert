@@ -53,7 +53,6 @@ export const forgetPassword = catchAsyncError(async(req: Request, res: Response)
     await user.save()
     const mailer = new Mailer(email)
     const link = process.env.BASE_URL! + "/" + token
-    console.log(link)
     await mailer.sendPasswordResetToken(link)
     return res.status(203).json({message: `check ${email} inbox to complete action`})
 })
@@ -61,7 +60,6 @@ export const forgetPassword = catchAsyncError(async(req: Request, res: Response)
 export const resetPassword = catchAsyncError(async(req: Request, res: Response)=>{
     try{
     const { token } = req.params;
-    console.log(token)
     if(!token)return sendMissingDependency(res, "token")
     const user = await User.findOne({resetToken: token, tokenExpiresIn:{$gte: new Date()}})
     console.log(user)

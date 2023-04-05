@@ -1,41 +1,27 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application } from "express";
+import "express-async-errors";
+import { createServer} from "http";
+import useSocket from "./services/chat";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import cors from "cors";
-import helmet from "helmet";
-import "express-async-errors";
 import useRouters from "./startup/routes";
-import passport from "passport";
-import Session from "express-session";
-import mongo from "connect-mongo";
-import listEndPoints from "express-list-endpoints";
-import * as multer from "./middlewares/media"
-import { destroyImage, uploadImage, uploadImages } from "./services/media";
-import listEndpoints from "express-list-endpoints";
+import { connectRedisClient } from "./services/cache";
+import useMiddlewares from "./startup/middlewares";
 
 dotenv.config()
 
 const app: Application = express()
+const Server = createServer(app)
 const port = Number(process.env.PORT)!
 
-app.use(cors())
-app.use(helmet())
-app.use(express.urlencoded({extended: true}))
-app.use(express.json())
-app.use(Session({
-    secret: process.env.SECRET!,
-    store: mongo.create({mongoUrl: process.env.DB_URI!}),
-    resave: true,
-    saveUninitialized: false
-}))
-app.use(passport.session())
-app.use(passport.initialize());
-
+useMiddlewares(app)
+connectRedisClient()
+useSocket(Server)
 useRouters(app)
 
 async function start(){
     try{
-    app.listen(port, ()=>console.log(`server running ${process.env.NODE_ENV} mode on port ${port}`))
+    Server.listen(port, ()=>console.log(`server running ${process.env.NODE_ENV} mode on port ${port}`))
     await mongoose.connect(process.env.DB_URI!)
     console.log("connected to db")
     }catch(ex){

@@ -1,26 +1,26 @@
 import { createClient } from "@redis/client";
 
-const config = process.env.NODE_ENV !== "production"? {} : {
+const config = {
     host: "",
     port: "",
     url: ""
 }
 
-const client = createClient(config)
-client.connect().then(res =>{
-    console.log("redis client connected" + res)
-}).catch(ex => console.log("failed to connect to redis server" + ex))
+const client = createClient();
+export const connectRedisClient = () =>client.connect().then(res =>{
+    console.log("redis client connected")
+}).catch(ex => console.log("failed to connect to redis server" , ex))
 
 export const setCache = async(key: string, data: unknown): Promise<string | null> =>{
     try{
-     return client.set(key, JSON.stringify(data))
+     return client.set(String(key), JSON.stringify(data))
     }catch(ex){
         console.log(ex)
         return null;
     }
     }
 
-export const getCache = async(key: string): Promise<string | null> =>{
+export const getCache = async(key: string): Promise<unknown | null> =>{
     try{
     const raw = await client.get(key);
     if(!raw)return null

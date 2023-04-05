@@ -5,7 +5,7 @@ import { uploadOne } from "../middlewares/media";
 
 const router = Router();
 
-router.use(authMiddleware)
-router.put("/profile", user.updateProfile);
-router.put("/avatar", uploadOne, user.updateUserAvatar);
+//authenticated routes below
+router.put("/profile",authMiddleware , user.updateProfile);
+router.put("/avatar",authMiddleware ,uploadOne, user.updateUserAvatar);
 export default router;
