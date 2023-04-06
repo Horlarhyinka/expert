@@ -1,12 +1,13 @@
 import { createClient } from "@redis/client";
 
-const config = {
-    host: "",
-    port: "",
-    url: ""
+const env = process.env
+const config = process.env.NODE_ENV !== "production"?{}:{
+    host: env.REDIS_HOST,
+    port: env.REDIS_PORT,
+    url: env.REDIS_URL
 }
 
-const client = createClient();
+const client = createClient(config);
 export const connectRedisClient = () =>client.connect().then(res =>{
     console.log("redis client connected")
 }).catch(ex => console.log("failed to connect to redis server" , ex))
