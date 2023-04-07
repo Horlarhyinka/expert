@@ -44,13 +44,13 @@ export const getAllCollections = catchAsyncError(async(req: Request, res: Respon
 export const getCollection = catchAsyncError(async(req: Request, res: Response)=>{
     const {id} = req.params
     if(!id)return responseHandlers.sendMissingDependency(res, "collection id")
-    const collection = await Collection.findById(id)
+    const collection = await Collection.findByIdAndUpdate(id, {$addToSet:{views: req.session.uid}}, {new: true})
     if(!collection)return responseHandlers.sendResourceNotFound(res, "collection")
     return res.status(200).json(collection)
 })
 
 export const removeCollection = catchAsyncError(async(req: Request, res: Response)=>{
-    const {id } = req.params;
+    const { id } = req.params;
     if(!id)return responseHandlers.sendMissingDependency(res, "collection id");
     const collectionDeleted = await (req.user! as user_int).removeCollection(id)
     if(!collectionDeleted)return responseHandlers.sendServerFailed(res, "delete collection");

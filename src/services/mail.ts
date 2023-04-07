@@ -15,9 +15,11 @@ const configOptions = {
     }
 }
 
+type Views = ({count: number, title: string})[];
+
 interface mailer_int{
     sendPasswordResetToken: (link: string) =>Promise<void>,
-    sendUserFeedBack: (count: number) => Promise<void> 
+    sendUserFeedBack: (views: Views) => Promise<void> 
 }
 
 class Mailer implements mailer_int{
@@ -35,8 +37,8 @@ class Mailer implements mailer_int{
             this.mailOptions.html = await ejs.renderFile(path.resolve(__dirname,"../views/password-reset.ejs"), {link})
             return this.Transporter.sendMail(this.mailOptions)
         }
-        sendUserFeedBack = async(count: number)=>{
-            this.mailOptions.html = await ejs.renderFile(path.resolve(__dirname,"../views/feedback.ejs"),{count})
+        sendUserFeedBack = async(views: Views)=>{
+            this.mailOptions.html = await ejs.renderFile(path.resolve(__dirname,"../views/feedback.ejs"),{views})
             return this.Transporter.sendMail(this.mailOptions)
         }
 }

@@ -6,6 +6,7 @@ import connectDB from "./config/db";
 import useRouters from "./startup/routes";
 import { connectRedisClient } from "./services/cache";
 import useMiddlewares from "./startup/middlewares";
+import useScheduler from "./services/schedule";
 
 import "express-async-errors";
 import handleErrors from "./config/errors";
@@ -21,6 +22,7 @@ useMiddlewares(app)
 connectRedisClient()
 useSocket(Server)
 useRouters(app)
+useScheduler()
 
 async function start(){
     try{

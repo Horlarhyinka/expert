@@ -7,6 +7,11 @@
     <title>feedback</title>
 </head>
 <body>
-    <p> you have <%= count %> collection views</p>
+    <h6>Weekly report on your skill collections:</h6>
+    <ul>
+    <% views.map(view =>{ %>
+       <li> collection <%= view.title %> has <%= view.count %> view<% `${view.count > 1?"s":""}`%></li> 
+    <% }) %>
+    </ul>
 </body>
 </html>

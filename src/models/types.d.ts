@@ -7,7 +7,7 @@ export interface user_int extends Document{
     firstName: string | undefined,
     lastName: string | undefined,
     about: string | undefined,
-    collections: (null | collection_int | mongoose.Types.ObjectId | string)[],
+    collections: (collection_int | mongoose.Types.ObjectId | string)[],
     tel: number,
     resetToken: string | undefined,
     tokenExpiresIn: Date | undefined,
@@ -26,7 +26,7 @@ export interface collection_int extends Document{
     skills: (string | null)[],
     portfolio: string | undefined,
     album: (string | null)[],
-    views: number,
+    views: string[],
     avatar: string | undefined
 }
 

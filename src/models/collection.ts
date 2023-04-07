@@ -23,6 +23,10 @@ const collectionSchema = new Schema<collection_int>({
     },
     avatar: {
         type: String
+    },
+    views:{
+        type: [String],
+        default: []
     }
 })
 
