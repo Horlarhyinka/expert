@@ -23,7 +23,6 @@ export default (server: server) =>{
                         rooms: []
                     }
                 await cache.setCache(args.user, [])
-                console.log("user logged in")
             }
             users[args.user].id = socket.id
         })
@@ -46,7 +45,6 @@ export default (server: server) =>{
             set.add(user.id)
             set.add(socket.id)
             const roomID = uuid();
-            console.log(roomID);
             ns.adapter.rooms.set(roomID, set);
             //push roomID to user's rooms array
             user.rooms.push(roomID);

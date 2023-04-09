@@ -94,7 +94,6 @@ export const addToAlbum = catchAsyncError(async(req: Request, res: Response)=>{
     if(!target)return responseHandlers.sendResourceNotFound(res, "collection")
     if(!req.files)return responseHandlers.sendMissingDependency(res, "image files")
     const urls = await uploadImages(req.files)
-    console.log({urls})
     if(!urls)return responseHandlers.sendServerFailed(res, "add image");
     const update = [...target.album, ...urls]
     target.album = update;

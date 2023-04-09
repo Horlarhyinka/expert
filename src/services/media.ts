@@ -15,10 +15,9 @@ secure: true
 
 export const uploadImage = async(filename: string): Promise<string | null> =>{
     if(!filename)return null;
-    try{
         const dir = path.resolve(__dirname, "../uploads/"+ filename)
+    try{
     const {secure_url} = await cloudinary.uploader.upload(dir, {folder: "expert"})
-    console.log({secure_url})
     if(!secure_url){
         fs.unlink(dir, (err)=>{
             if(err)throw Error()
@@ -30,24 +29,22 @@ export const uploadImage = async(filename: string): Promise<string | null> =>{
     });
     return secure_url;
     }catch(ex){
+        fs.unlink(dir, (err)=>{
+            if(err)throw Error()
+        });
         console.log(ex)
         return null
     }
 }
 
 export const uploadImages = async(arg: Request["files"]): Promise<(string | null)[] | null> =>{
-    console.log("i am i here...")
     const files = arg as (Request["file"] | null)[]
-    console.log(files)
     if(files.length < 1)return null;
     try{
-        console.log("before iteration")
         const result = await Promise.all(files!.map(async(file: Request["file"] | null)=>{
             const url = await uploadImage(file!.filename);
-            console.log({url})
             return url && url;
         }))
-        console.log(result)
         return result
     }catch(ex){
         console.log("exeption",ex)
@@ -59,7 +56,6 @@ export const destroyImage = async(url: string) =>{
     const id = getPublicId(url)
     if(!id)return null;
     const res = await cloudinary.uploader.destroy(id) 
-    // console.log(res)
     return res
 }
 

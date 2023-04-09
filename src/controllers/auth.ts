@@ -1,7 +1,7 @@
 import User from "../models/user";
 import { Request, Response } from "express";
 import catchAsyncError from "../utils/catchAsyncError";
-import { sendDuplicateResource, sendMissingDependency, sendResourceNotFound } from "../utils/responseHandlers";
+import { sendDuplicateResource, sendMissingDependency, sendResourceNotFound, sendServerFailed } from "../utils/responseHandlers";
 import { validateCredentials } from "../utils/validators";
 import { pick } from "lodash";
 import { MongooseError } from "mongoose";
@@ -62,7 +62,6 @@ export const resetPassword = catchAsyncError(async(req: Request, res: Response)=
     const { token } = req.params;
     if(!token)return sendMissingDependency(res, "token")
     const user = await User.findOne({resetToken: token, tokenExpiresIn:{$gte: new Date()}})
-    console.log(user)
     if(!user)return sendResourceNotFound(res, "user")
     const {password, confirmPassword} = req.body
     if(!password || !confirmPassword) return sendMissingDependency(res, "password and confirm password")
@@ -75,6 +74,7 @@ export const resetPassword = catchAsyncError(async(req: Request, res: Response)=
     return res.status(200).json({user: pick(user, ["email", "collections"]), token: authToken})
     }catch(ex){
         console.log(ex)
+        return sendServerFailed(res, "reset password")
     }
 
 })

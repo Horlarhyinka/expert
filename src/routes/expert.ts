@@ -5,6 +5,6 @@ import useIdParam from "../middlewares/validateId";
 const router = Router()
 
 router.get("/", getExperts)
-router.get("/id", useIdParam, getExpert)
+router.get("/:id", useIdParam, getExpert)
 
 export default router
