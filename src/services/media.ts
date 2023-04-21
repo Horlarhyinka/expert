@@ -4,6 +4,7 @@ import path from "path";
 import fs from "fs";
 import { Request } from "express";
 import { user_int, collection_int } from "../models/types";
+import { secureUrlRegex } from "../utils/regex";
 dotenv.config()
 
 cloudinary.config({
@@ -27,6 +28,7 @@ export const uploadImage = async(filename: string): Promise<string | null> =>{
     fs.unlink(dir, (err)=>{
         if(err)throw Error()
     });
+    if(!secureUrlRegex.test(secure_url))throw Error("invalid url type")
     return secure_url;
     }catch(ex){
         fs.unlink(dir, (err)=>{
@@ -43,6 +45,7 @@ export const uploadImages = async(arg: Request["files"]): Promise<(string | null
     try{
         const result = await Promise.all(files!.map(async(file: Request["file"] | null)=>{
             const url = await uploadImage(file!.filename);
+            if(url && !secureUrlRegex.test(url))throw Error("invalid url type")
             return url && url;
         }))
         return result
@@ -77,6 +80,7 @@ export const updateAvatar = async(Model: user_int | collection_int, filename: st
     }
     const url = await uploadImage(filename!);
     if(url){
+    if(!secureUrlRegex.test(url))throw Error("invalid url type")
     Model.avatar = url;
     const updated = await Model.save()
     return updated;
