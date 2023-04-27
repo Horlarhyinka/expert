@@ -15,7 +15,7 @@ handleErrors()
 dotenv.config()
 
 const app: Application = express()
-const Server = createServer(app)
+let Server = createServer(app)
 const port = Number(process.env.PORT)!
 
 useMiddlewares(app)
@@ -26,7 +26,7 @@ useScheduler()
 
 async function start(){
     try{
-    Server.listen(port, ()=>console.log(`server running ${process.env.NODE_ENV} mode on port ${port}`))
+    Server = Server.listen(port, ()=>console.log(`server running ${process.env.NODE_ENV} mode on port ${port}`))
     await connectDB()
     console.log("connected to db")
     }catch(ex){
@@ -36,3 +36,5 @@ async function start(){
 }
 
 start()
+
+export default Server;

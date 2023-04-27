@@ -21,3 +21,14 @@ describe("telephone regex", ()=>{
         expect(result).toBeTruthy()
     })
 })
+
+describe("secure url regex", ()=>{
+    it("should return false for non secure url", ()=>{
+        const result = regex.secureUrlRegex.test("http://www.url.com")
+        expect(result).toBeFalsy()
+    })
+    it("should return true for secure url", ()=>{
+        const result = regex.secureUrlRegex.test("https://www.url.com")
+        expect(result).toBeTruthy()
+    })
+})

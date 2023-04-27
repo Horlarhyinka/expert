@@ -12,7 +12,7 @@ export default (userSchema: Schema<user_int>) =>{
         if(!password)return false;
         return bcrypt.compare(password, this.password)
     }
-    
+
     userSchema.methods.updateProfile = async function(update: Request["body"]):Promise<user_int>{
         const mutables = ["firstName", "lastName", "about", "tel"]
         Object.keys(update).forEach((key) =>{

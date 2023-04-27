@@ -11,5 +11,6 @@ process.on("unhandledRejection", (ex)=>{
 })}
 
 function shutDown(){
+    console.log("exiting............")
     return process.exit(1)
 }
