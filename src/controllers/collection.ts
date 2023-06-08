@@ -18,7 +18,7 @@ export const createCollection = catchAsyncError(async(req: Request, res: Respons
     }
     const updatedUsercollection = await user!.addCollection(req.body)
     if(!updatedUsercollection)return responseHandlers.sendServerFailed(res, "add collection")
-    return res.status(200).json(updatedUsercollection)
+    return res.status(201).json(updatedUsercollection)
 })
 
 export const getCollections = catchAsyncError(async(req: Request, res: Response)=>{

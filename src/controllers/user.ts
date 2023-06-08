@@ -11,7 +11,7 @@ export const updateProfile = catchAsyncError(async(req: Request, res: Response)=
     const profile = await user!.updateProfile(req.body);
     if(!profile)return user;
     profile!.password = ""
-    return res.status(201).json(profile);
+    return res.status(200).json(profile);
 })
 
 export const updateUserAvatar = catchAsyncError(async(req: Request, res: Response)=>{

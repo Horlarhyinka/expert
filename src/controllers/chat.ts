@@ -4,7 +4,7 @@ import { getCache } from "../services/cache";
 import { user_int } from "../models/types";
 
 export const getChats = catchAsyncError(async(req: Request, res: Response)=>{
-    const rooms = await getCache((req.user as user_int)._id) as string[] | null
+    const rooms = await getCache(String((req.user as user_int)._id)) as string[] | null
     if(!rooms)return res.status(200).json([])
     const result = await Promise.all(rooms.map(async(room)=>{
         const chats = await getCache(room);

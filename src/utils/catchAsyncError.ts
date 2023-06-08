@@ -5,7 +5,7 @@ export default (fn: Function) =>{
         try{
             return await fn(req, res, next)
         }catch(ex){
-            console.log(ex)
+            console.log("Error: ",ex)
             next(ex)
         }
     }

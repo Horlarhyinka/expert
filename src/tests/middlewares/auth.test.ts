@@ -5,6 +5,8 @@ import Server from "../..";
 import User from "../../models/user";
 import { user_int } from "../../models/types";
 
+afterEach(()=>Server.close())
+
 describe("auth middleware", ()=>{
     let user: user_int;
     let token: string;

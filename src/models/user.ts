@@ -1,12 +1,8 @@
-import { Schema, model, Model} from 'mongoose';
-import { user_int, collection_int, user_model } from './types';
+import { Schema, model } from 'mongoose';
+import { user_int, user_model } from './types';
 import { mailRegex, telRegex } from '../utils/regex';
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import userMethods from './user.methods';
-import Collection from "./collection";
-import { Request } from 'express';
 
 dotenv.config()
 
@@ -49,16 +45,6 @@ const userSchema = new Schema<user_int>({
     }
 })
 
-userSchema.pre("save", async function(){
-    const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(this.password, salt)
-    this.password = hashedPassword
-})
-
-userSchema.statics.findDuplicate = async function (email: string) {
-    return this.findOne({email})
-}
-
-userMethods(userSchema);
+userMethods(userSchema)
 
 export default model<user_int, user_model>("user", userSchema);

@@ -1,23 +1,23 @@
-import { user_int, user_model } from "./types";
-import { Request } from "express";
 import { Schema } from "mongoose";
+import { user_int } from "./types";
 import bcrypt from "bcrypt";
 import Collection from "./collection";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-dotenv.config()
+import { Request } from "express";
+
 
 export default (userSchema: Schema<user_int>) =>{
+
     userSchema.methods.verifyPassword = function(password: string){
         if(!password)return false;
         return bcrypt.compare(password, this.password)
     }
-
+    
     userSchema.methods.updateProfile = async function(update: Request["body"]):Promise<user_int>{
         const mutables = ["firstName", "lastName", "about", "tel"]
-        Object.keys(update).forEach((key) =>{
+        update && Object.keys(update).forEach((key) =>{
             if(mutables.includes(key)){
-                this.set(key, update[key]!)
+                this.set(key, update[key as keyof typeof update]!)
             }
         })
         return await this.save()
@@ -48,4 +48,15 @@ export default (userSchema: Schema<user_int>) =>{
     userSchema.methods.genToken = function(){
         return jwt.sign({id: (this as user_int)._id}, process.env.SECRET!, {expiresIn: "2d"})
     }
+    
+    userSchema.pre("save", async function(){
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(this.password, salt)
+        this.password = hashedPassword
+    })
+    
+    userSchema.statics.findDuplicate = async function (email: string) {
+        return this.findOne({email})
+    }
+    
 }

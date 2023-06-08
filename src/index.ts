@@ -16,7 +16,7 @@ dotenv.config()
 
 const app: Application = express()
 let Server = createServer(app)
-const port = Number(process.env.PORT)!
+const port = process.env.NODE_ENV !== "test"?Number(process.env.PORT)!:undefined;
 
 useMiddlewares(app)
 connectRedisClient()
